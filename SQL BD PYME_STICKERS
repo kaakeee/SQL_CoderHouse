@@ -1,0 +1,52 @@
+/*SQL CoderHouse*/
+/*Creacion de BD y tablas*/
+
+
+CREATE DATABASE IF NOT EXISTS PYME_STICKERS; 
+
+USE PYME_STICKERS;
+
+CREATE TABLE IF NOT EXISTS Clientes (   /*datos del cliente*/
+cuit_cuil INT NOT NULL UNIQUE PRIMARY KEY,   
+email varchar(40) not null,
+telefono INT,
+nombre VARCHAR(40)
+);
+
+CREATE TABLE IF NOT EXISTS Proveedores (
+id_proveedor INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+email VARCHAR(50),
+telefono VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS Productos (
+id_modelo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+id_proveedor INT NOT NULL,
+categoria VARCHAR(20) NOT NULL,
+FOREIGN KEY (id_proveedor) REFERENCES Proveedores (id_proveedor)
+);
+
+CREATE TABLE IF NOT EXISTS Pedidos (
+id_pedido INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+cuit_cuil INT NOT NULL UNIQUE,
+id_modelo INT NOT NULL UNIQUE,
+cantidad DECIMAL(10,2) NOT NULL,
+FOREIGN KEY (cuit_cuil) REFERENCES Clientes(cuit_cuil),
+FOREIGN KEY (id_modelo) REFERENCES Productos (id_modelo)
+);
+
+CREATE TABLE IF NOT EXISTS Facturacion (
+id_factura INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+cuit_cuil INT NOT NULL,
+total_compra DECIMAL(10,2),
+FOREIGN KEY (cuit_cuil) REFERENCES Clientes(cuit_cuil)
+);
+
+CREATE TABLE IF NOT EXISTS Envios (
+numero_de_seguimiento VARCHAR(50) NOT NULL PRIMARY KEY,
+id_pedido INT NOT NULL,
+direccion VARCHAR(40) NOT NULL,
+provincia VARCHAR(40) NOT NULL,
+estado VARCHAR(30) NOT NULL,
+FOREIGN KEY (id_pedido) REFERENCES Pedidos (id_pedido)
+);
