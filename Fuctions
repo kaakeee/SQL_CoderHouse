@@ -1,0 +1,12 @@
+Create FUNCTION Calcular_IVA(factura DECIMAL(10,2)) 
+RETURNS decimal(10,0)
+DETERMINISTIC
+BEGIN
+	DECLARE resultado DECIMAL(10,2);
+    DECLARE iva DECIMAL(10,2);
+    SET iva = 1.21;
+    SET resultado = factura * iva;
+	RETURN resultado;
+END
+
+--------------------------------
