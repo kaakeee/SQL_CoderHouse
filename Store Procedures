@@ -1,0 +1,36 @@
+/* en el campo columna poner alguna columna de la tabla pedidos, y order_by establecer la forma, es decir 'ASC' o 'DESC'*/
+
+
+DELIMITER //
+CREATE PROCEDURE `buscador_PEDIDOS` (IN columna VARCHAR(20), IN order_by VARCHAR(4))
+
+/*aca entra la columna deseada para poder buscar por esa*/
+IF columna <> '' THEN
+	SET @colum = CONCAT('ORDER BY ', columna);
+ELSE 
+	SET @colum = ''; 
+END IF;
+
+/*aca termino segun lo ingresado en colunna*/
+SET @resultado = CONCAT('SELECT * FROM pyme_stickers.pedidos ', @colum);
+
+
+/*aca entra el desc o asc para ordenar*/
+IF order_by <> '' THEN
+	SET @orderby = CONCAT(@resultado,' ', order_by);
+else
+	SET @orderby = CONCAT(@resultado);
+END IF;
+
+/*aca entra la concatenacion final con toda la consulta hecha*/
+SET @resultado_final = CONCAT(@orderby);
+
+
+
+/* lo de abajo simplemente prepara de procedure a una consulta para sql*/
+PREPARE querySQL FROM @resultado_final;   /*prepara el sting a consulta SQL*/
+EXECUTE querySQL;                   /* la ejecuta*/
+DEALLOCATE PREPARE querySQL;        /* deallocate la sql*/
+END //
+
+
