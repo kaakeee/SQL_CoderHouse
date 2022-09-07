@@ -3,7 +3,7 @@
 
 DELIMITER //
 CREATE PROCEDURE `buscador_PEDIDOS` (IN columna VARCHAR(20), IN order_by VARCHAR(4))
-
+BEGIN
 /*aca entra la columna deseada para poder buscar por esa*/
 IF columna <> '' THEN
 	SET @colum = CONCAT('ORDER BY ', columna);
