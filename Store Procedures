@@ -34,3 +34,25 @@ DEALLOCATE PREPARE querySQL;        /* deallocate la sql*/
 END //
 
 
+
+
+/* este otro SP crea un proveedor con los 3 datos, el primero es INT y el resto es varchar */
+
+DELIMITER //
+CREATE PROCEDURE `crear_proveedor`(IN proveedor INT, IN email VARCHAR(75), telefono VARCHAR(60))
+BEGIN
+/*aca entra los datos*/
+IF proveedor > 100 THEN
+	/* concateno para introducir los datos*/
+	SET @dato = CONCAT('insert into pyme_stickers.proveedores (id_proveedor, email, telefono) values (" ', proveedor, ' ", ', ' " ', email,' ", ', ' " ', telefono,' ")');  
+ELSE   
+	SET @dato = '';
+END IF;
+
+
+/* lo de abajo simplemente prepara de procedure a una consulta para sql*/
+PREPARE resultadoSQL FROM @dato;   /*prepara el sting a consulta SQL*/
+EXECUTE resultadoSQL;                   /* la ejecuta*/
+DEALLOCATE PREPARE resultadoSQL;        /* deallocate la sql*/
+
+END //
