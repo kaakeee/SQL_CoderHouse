@@ -24,8 +24,8 @@ FOREIGN KEY (id_proveedor) REFERENCES Proveedores (id_proveedor)
 
 CREATE TABLE IF NOT EXISTS Pedidos (
 id_pedido INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
-cuit_cuil varchar(30) NOT NULL, /* elimine lo unico, esto provocaba que un cliente solo pueda comprar 1 vez */
-id_modelo INT NOT NULL, /* lo cambie a no es unico*/
+cuit_cuil varchar(30) NOT NULL, /* elimine lo unico, esto provocaba que un cliente solo pueda comprar 1 vez  */
+id_modelo INT NOT NULL, /* lo cambie a no es unico*/ 
 cantidad DECIMAL(10,2) NOT NULL,
 FOREIGN KEY (cuit_cuil) REFERENCES Clientes(cuit_cuil),
 FOREIGN KEY (id_modelo) REFERENCES Productos (id_modelo)
