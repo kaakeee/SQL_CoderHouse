@@ -2,7 +2,8 @@
 
 USE pyme_stickers;
 /* tabla de log de nuevas facturas con sus montos y usuarios que crearon la trabla y/o modificaciones*/
-CREATE TABLE new_facturacion (
+/* en esta tabla tomo mas datos porque es infomacion mas importante */
+CREATE TABLE old_facturacion (
 id_factura INT,       /* se elimina que sea primary key*/
 cuit_cuil VARCHAR(40),
 total_compra DECIMAL(30,2),
@@ -14,20 +15,28 @@ fecha_hora timestamp
 
 CREATE TABLE new_pedidos(
 id_pedido INT,   /* se elimina que sea primary key*/
-cuit_cuil VARCHAR(40),
-id_modelo DECIMAL(30,2),
-cantidad DECIMAL(5,2),
-user CHAR(30),           /* user y fecha para saber quien hizo los cambios y cuando  */
+user CHAR(30),    /* user y fecha para saber quien hizo los cambios y cuando   */
 fecha_hora timestamp
 );
 
 
 
 
-/* primer trigger que ve las modificaciones de la tabla facturacion*/
+/* trigger que ve las modificaciones de la tabla facturacion, copiando los anteriores*/
 
 CREATE TRIGGER tr_facturas
 AFTER update ON facturacion /* despues del update*/  /* la tabla*/
 FOR EACH ROW /*cada fila q se inserte*/
-INSERT INTO new_facturacion (id_factura, cuit_cuil, total_compra, user, fecha_hora)  /* la tabla/columnas que queremos copiar*/
-VALUES (NEW.id_factura, NEW.cuit_cuil, NEW.total_compra, session_user(), current_timestamp());   /*los datos que queremos copiar a la nueva tabla de auditoria*/
+INSERT INTO old_facturacion (id_factura, cuit_cuil, total_compra, user, fecha_hora)  /* la tabla/columnas que queremos copiar*/
+VALUES (old.id_factura, old.cuit_cuil, old.total_compra, session_user(), current_timestamp());     /*los datos que queremos copiar a la nueva tabla de auditoria*/
+
+
+/* trigger que ve el id_pedido nuevos en la tabla pedidos, quien los anota y cuando*/
+
+CREATE TRIGGER tr_pedidos
+BEFORE INSERT on pedidos
+FOR EACH ROW
+INSERT INTO new_pedidos (id_pedido, user, fecha_hora)
+VALUES (NEW.id_pedido, session_user(), current_timestamp());
+
+
