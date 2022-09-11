@@ -3,7 +3,7 @@
 USE pyme_stickers;
 /* tabla de log de nuevas facturas con sus montos y usuarios que crearon la trabla y/o modificaciones*/
 CREATE TABLE new_facturacion (
-id_factura INT PRIMARY KEY,
+id_factura INT,       /* se elimina que sea primary key*/
 cuit_cuil VARCHAR(40),
 total_compra DECIMAL(30,2),
 user CHAR(30),
@@ -13,7 +13,7 @@ fecha_hora timestamp
 /*tabla de registro de nuevas ventas, de la tabla pedidos */ 
 
 CREATE TABLE new_pedidos(
-id_pedido INT PRIMARY KEY,
+id_pedido INT,   /* se elimina que sea primary key*/
 cuit_cuil VARCHAR(40),
 id_modelo DECIMAL(30,2),
 cantidad DECIMAL(5,2),
@@ -29,5 +29,5 @@ fecha_hora timestamp
 CREATE TRIGGER tr_facturas
 AFTER update ON facturacion /* despues del update*/  /* la tabla*/
 FOR EACH ROW /*cada fila q se inserte*/
-INSERT INTO new_facturacion (id_facura, cuit_cuil, total_compra, user, fecha_hora)  /*columna copia */
-VALUES (NEW.id_factura, NEW.cuit_cuil, NEW.total_compra, user, fecha_hora);   /* la original*/
+INSERT INTO new_facturacion (id_factura, cuit_cuil, total_compra, user, fecha_hora)  /*columna copia */
+VALUES (NEW.id_factura, NEW.cuit_cuil, NEW.total_compra, session_user(), current_timestamp());   /* la original*/
