@@ -1,19 +1,26 @@
 /*Tablas en donde van los datos de los triggers*/
 
 USE pyme_stickers;
+
+
+
 /* tabla de log de nuevas facturas con sus montos y usuarios que crearon la trabla y/o modificaciones*/
 /* en esta tabla tomo mas datos porque es infomacion mas importante */
+
 CREATE TRIGGER tr_facturas
 AFTER update ON facturacion /* despues del update*/  /* la tabla*/
 FOR EACH ROW /*cada fila q se inserte*/
 INSERT INTO old_facturacion (id_factura, cuit_cuil, total_compra, user, fecha_hora)  /*columna copia */
 VALUES (old.id_factura, old.cuit_cuil, old.total_compra, session_user(), current_timestamp());   /* la original*/
 
+
+/*esta tabla se encarga de ver quien ingresa los nuevos pedidos y quien lo hace */
+
 CREATE TRIGGER tr_pedidos
 BEFORE INSERT on pedidos
 FOR EACH ROW
-INSERT INTO new_pedidos (id_pedido, user, fecha_hora)
-VALUES (NEW.id_pedido, session_user(), current_timestamp());
+INSERT INTO new_pedidos (id_pedido, user, fecha_hora)   /*la tabla original de donde toma los datos */
+VALUES (NEW.id_pedido, session_user(), current_timestamp());   /* la tabla de los registros */
 
 
 #DROP TRIGGER tr_facturas;
