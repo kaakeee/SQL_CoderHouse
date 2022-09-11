@@ -33,7 +33,7 @@ FOREIGN KEY (id_modelo) REFERENCES Productos (id_modelo)
 
 CREATE TABLE IF NOT EXISTS Facturacion (
 id_factura INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
-cuit_cuil varchar(30) NOT NULL UNIQUE,
+cuit_cuil varchar(30) NOT NULL,  /* elimine lo unico, esto provocaba que un cliente solo pueda comprar 1 vez  */
 total_compra DECIMAL(10,2),
 FOREIGN KEY (cuit_cuil) REFERENCES Clientes(cuit_cuil)
 );
