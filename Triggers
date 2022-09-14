@@ -1,7 +1,23 @@
 /*Tablas en donde van los datos de los triggers*/
 
 USE pyme_stickers;
+/* tabla de log de nuevas facturas con sus montos y usuarios que crearon la trabla y/o modificaciones*/
+/* en esta tabla tomo mas datos porque es infomacion mas importante */
+CREATE TABLE old_facturacion (
+id_factura INT,       /* se elimina que sea primary key*/
+cuit_cuil VARCHAR(40),
+total_compra DECIMAL(30,2),
+user CHAR(30),            /* user y fecha para saber quien hizo los cambios y cuando   */
+fecha_hora timestamp
+);
 
+/*tabla de registro de nuevas ventas, de la tabla pedidos */ 
+
+CREATE TABLE new_pedidos(
+id_pedido INT,   /* se elimina que sea primary key*/
+user CHAR(30),    /* user y fecha para saber quien hizo los cambios y cuando   */
+fecha_hora timestamp
+);
 
 
 /* tabla de log de nuevas facturas con sus montos y usuarios que crearon la trabla y/o modificaciones*/
