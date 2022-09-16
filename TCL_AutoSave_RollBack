@@ -19,9 +19,6 @@ SELECT * FROM pyme_stickers.new_pedidos;  #muestra los cambios
 #commit;                                  #para ejecutar los cambios si estamos muy seguros
 
 /*
-Primera tabla para probar el lenguaje TCL
-https://github.com/kaakeee/SQL_CoderHouse/blob/main/Triggers
-
 CREATE TABLE new_pedidos(
 id_pedido INT,    se elimina que sea primary key
 user CHAR(30),     user y fecha para saber quien hizo los cambios y cuando   
