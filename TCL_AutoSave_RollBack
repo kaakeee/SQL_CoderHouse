@@ -18,13 +18,7 @@ SELECT * FROM pyme_stickers.new_pedidos;  #muestra los cambios
 #rollback;                                #para eliminar los cambios
 #commit;                                  #para ejecutar los cambios si estamos muy seguros
 
-/*
-CREATE TABLE new_pedidos(
-id_pedido INT,    se elimina que sea primary key
-user CHAR(30),     user y fecha para saber quien hizo los cambios y cuando   
-fecha_hora timestamp
-);
-
+/* PARA REINSERTAR LOS DATOS
 insert into Pedidos (id_pedido, cuit_cuil, id_modelo, cantidad)
 values
  PARA INSERTAR LOS DATOS EN LA TABLA PEDIDOS   NOOOO LA NEW PEDIDOS YA QUE EN ESTA SE INGRESA CON LOS TRIGGERS
@@ -38,7 +32,6 @@ delete FROM pyme_stickers.pedidos WHERE id_pedido = 101;
 delete FROM pyme_stickers.pedidos WHERE id_pedido = 102;  
 delete FROM pyme_stickers.pedidos WHERE id_pedido = 103;
 delete FROM pyme_stickers.pedidos WHERE id_pedido = 104;
-
 */
 
 /*segunda tabla usada, comentada para que no se pise con la primera*/   
