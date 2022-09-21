@@ -1,3 +1,4 @@
+DELIMITER //
 Create FUNCTION Calcular_IVA(factura INT) 
 RETURNS decimal(15,2)
 DETERMINISTIC
@@ -19,7 +20,7 @@ BEGIN
     SET resultado = factura_total * iva;
 	RETURN resultado;
 	
-END
+END //
 
 /*esta funcion calcula el iva de la factura con el id_factura*/
 
@@ -29,6 +30,7 @@ END
 
 
 /* esta funcion busca el numero de seguimiento con el id_pedido*/
+DELIMITER //
 
 CREATE FUNCTION Buscar_Pedido(Pedido INT)
 RETURNS varchar(70)
@@ -41,4 +43,4 @@ FROM envios
 WHERE Pedido = id_pedido;
 
 RETURN numero_pedido;
-END
+END //
