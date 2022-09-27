@@ -1,0 +1,66 @@
+CREATE DATABASE IF NOT EXISTS  PYME_DROP_SHIPPING;
+USE PYME_DROP_SHIPPING;
+
+/* El trabajo final lo implemento en ingles, para que todo siga un mismo idioma*/
+/* The final work is implemented in English, so that everything follows the same language */
+
+CREATE TABLE IF NOT EXISTS Customers ( /* info the customer*/
+customer_id int NOT NULL UNIQUE PRIMARY KEY,
+first_name varchar(30) not null,
+last_name varchar(30),
+phone varchar(40), 
+email varchar(50)
+);
+
+CREATE TABLE IF NOT EXISTS Supplier (  /* the supplier o shop*/
+id_supplier INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+email varchar(50),     
+phone varchar(40),
+first_name varchar(30) not null
+);
+
+CREATE TABLE IF NOT EXISTS Products(  /*products of shop/stock*/
+id_model INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+id_supplier INT NOT NULL,
+category varchar(25),  
+name varchar(50),
+FOREIGN KEY (id_supplier) REFERENCES Supplier (id_supplier)
+);
+
+CREATE TABLE IF NOT EXISTS Orders ( /*orders of customers*/
+id_order INT NOT NULL PRIMARY KEY,
+amount DECIMAL(8,2),
+id_model INT,
+FOREIGN KEY (id_model) REFERENCES Products (id_model)
+);
+
+CREATE TABLE IF NOT EXISTS Billing (
+id_billing INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+type INT,
+tax_number varchar(60),
+total_purchase DECIMAL(8,2),
+id_order INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Seller (
+id_seller INT NOT NULL UNIQUE auto_increment PRIMARY KEY,
+name varchar(30) not null,
+phone varchar(40),
+email varchar(50),
+cbu VARCHAR(60)
+);
+
+CREATE TABLE IF NOT EXISTS Commission (
+id_billing INT NOT NULL,
+id_seller INT NOT NULL,
+condition_purchase int,
+cbu VARCHAR(60)
+);
+
+CREATE TABLE IF NOT EXISTS Shipments (
+tracking_number VARCHAR(60) NOT NULL,
+id_order INT,
+address varchar(60),
+estate varchar(50),
+condition_purchase int
+);
