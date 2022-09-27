@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS  PYME_DROP_SHIPPING;
 USE PYME_DROP_SHIPPING;
-
+/*DER https://drive.google.com/file/d/1IAkyLe8vKdq37fqXS9MOKFmY8whUt86w/view?usp=sharing */
 /* El trabajo final lo implemento en ingles, para que todo siga un mismo idioma*/
 /* The final work is implemented in English, so that everything follows the same language */
 
