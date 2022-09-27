@@ -185,8 +185,31 @@ END IF;
 /*here between the final concatenation with all the query made*/
 SET @result_final = CONCAT(@orderby);
 
-/* lo de abajo simplemente prepara de procedure a una consulta para sql*/
-PREPARE querySQL FROM @result_final;   /*prepara el sting a consulta SQL*/
-EXECUTE querySQL;                   /* la ejecuta*/
-DEALLOCATE PREPARE querySQL;        /* deallocate la sql*/
+/*the below simply prepares from procedure to a query for sql*/
+PREPARE querySQL FROM @result_final;  
+EXECUTE querySQL;                  
+DEALLOCATE PREPARE querySQL;       
+END //
+
+
+/*this other SP creates a provider with the 3 data, the first is INT and the rest is varchar */
+
+DELIMITER //
+CREATE PROCEDURE `create_supplier`(IN id_supplier INT, IN email VARCHAR(50), IN phone VARCHAR(40), IN first_name VARCHAR(30))
+BEGIN
+/*here he assured me that the number will be bigger*/
+SET @max = concat('select MAX(ID_supplier) FROM PYME_DROP_SHIPPING.Supplier');
+/*data enters here*/
+IF id_supplier > @max THEN
+	/* concatenate to enter the data*/
+	SET @dat = CONCAT('insert into PYME_DROP_SHIPPING.supplier (id_supplier, email, phone, first_name) values (" ', id_supplier, ' ", ' , ' " ', email,' ", ' , ' " ', phone,' " , ', ' " ', first_name,' ")');  
+ELSE   
+	SET @dat = '';
+END IF;
+
+/*the below simply prepares from procedure to a query for sql*/
+PREPARE resultSQL FROM @dat;   
+EXECUTE resultSQL;                 
+DEALLOCATE PREPARE resultSQL;        
+
 END //
