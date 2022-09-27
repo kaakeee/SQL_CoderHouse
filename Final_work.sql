@@ -116,16 +116,16 @@ values
 
 insert into Billing (id_billing, type, tax_number, total_purchase, id_order)
 values
-(1, 'A', '543557846135_768', '45635', 1),
-(2, 'B','5435546135_5478','857653' , 2),
-(3, 'C','8769786135_5468', '5468541', 3),
+(1, 'A', '543557846135_768', '45635.23', 1),
+(2, 'B','5435546135_5478','857653.65' , 2),
+(3, 'C','8769786135_5468', '5468541.44', 3),
 (4, 'B','94613645_5498', '687923' ,4),
 (5, 'B','543678135_5498', '86789' ,5),
-(6, 'B','5435546135_5468', '689145', 6),
-(7, 'B','5435366135_568', '6897987', 7),
-(8, 'C','6546135_5468', '894123' , 8),
-(9, 'A','6546135_5968', '89485987', 9),
-(10, 'A','543035_5498', '9874213563' , 10);
+(6, 'B','5435546135_5468', '689145.56', 6),
+(7, 'B','5435366135_568', '689798.7', 7),
+(8, 'C','6546135_5468', '8941.23' , 8),
+(9, 'A','6546135_5968', '894859.87', 9),
+(10, 'A','543035_5498', '9874135.63' , 10);
 
 insert into Seller (id_seller, name, phone, email, cbu)
 values
@@ -159,3 +159,34 @@ values
 ('bdac11b1aa117086f7d9f6ef51283539accb093a', 10, '9 Duke Parkway', 'Solomon Islands','1');
 
 
+
+/* in the column field put some column from the orders table, and set the order_by form, ie 'ASC' or 'DESC'*/
+DELIMITER //
+CREATE PROCEDURE `search_Orders` (IN column_a VARCHAR(20), IN order_by VARCHAR(4))
+BEGIN
+/*here between the desired column to be able to search for that*/
+IF column_a <> '' THEN
+	SET @colum = CONCAT('ORDER BY ', column_a);
+ELSE 
+	SET @colum = ''; 
+END IF;
+
+/*here term as entered in column*/
+SET @result = CONCAT('SELECT * FROM PYME_DROP_SHIPPING.Orders ', @colum);
+
+
+/*here enter the desc or asc to order*/
+IF order_by <> '' THEN
+	SET @orderby = CONCAT(@result,' ', order_by);
+else
+	SET @orderby = CONCAT(@result);
+END IF;
+
+/*here between the final concatenation with all the query made*/
+SET @result_final = CONCAT(@orderby);
+
+/* lo de abajo simplemente prepara de procedure a una consulta para sql*/
+PREPARE querySQL FROM @result_final;   /*prepara el sting a consulta SQL*/
+EXECUTE querySQL;                   /* la ejecuta*/
+DEALLOCATE PREPARE querySQL;        /* deallocate la sql*/
+END //
