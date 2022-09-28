@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS  PYME_DROP_SHIPPING;
 USE PYME_DROP_SHIPPING;
 /*DER https://drive.google.com/file/d/1IAkyLe8vKdq37fqXS9MOKFmY8whUt86w/view?usp=sharing */
@@ -33,7 +34,9 @@ CREATE TABLE IF NOT EXISTS Orders ( /*orders of customers*/
 id_order INT NOT NULL PRIMARY KEY,
 amount DECIMAL(12,2),
 id_model INT,
-FOREIGN KEY (id_model) REFERENCES Products (id_model)
+customer_id INT,
+FOREIGN KEY (id_model) REFERENCES Products (id_model),
+FOREIGN KEY (customer_id) REFERENCES Customers (customer_id)
 );
 
 CREATE TABLE IF NOT EXISTS Billing (
@@ -41,7 +44,8 @@ id_billing INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
 type varchar(10),
 tax_number varchar(60),
 total_purchase DECIMAL(12,2),
-id_order INT NOT NULL
+id_order INT NOT NULL,
+FOREIGN KEY (id_order) REFERENCES Orders (id_order)
 );
 
 CREATE TABLE IF NOT EXISTS Seller (
@@ -56,7 +60,9 @@ CREATE TABLE IF NOT EXISTS Commission (
 id_billing INT NOT NULL,
 id_seller INT NOT NULL,
 condition_purchase int,
-cbu VARCHAR(60)
+cbu VARCHAR(60),
+foreign key (id_billing) REFERENCES billing (id_billing),
+FOREIGN KEY (id_seller) REFERENCES Seller (id_seller)
 );
 
 CREATE TABLE IF NOT EXISTS Shipments (
@@ -64,9 +70,12 @@ tracking_number VARCHAR(60) NOT NULL,
 id_order INT,
 address varchar(60),
 country varchar(50),
-condition_purchase int
+condition_purchase int,
+Foreign key (id_order) REFERENCES Orders (id_order)
 );
 
+#Data
+------------------------------------------------------------------------------------------------------------------------------------
 /*insert test data*/
 insert into Customers (customer_id, first_name, last_name, phone, email) 
 values  
@@ -101,18 +110,18 @@ values
  (13, 2, 'S', 'PenDrive_1TB'),
  (14, 1, 'M', 'SSD_250Gb');
  
- insert into Orders (id_order, amount, id_model)
+ insert into Orders (id_order, amount, id_model, customer_id)
  values
-(1, '34', 3),
-(2, '3', 2),
-(3, '45', 5),
-(4, '348', 6),
-(5, '52', 10),
-(6, '38', 11),
-(7, '50', 14),
-(8, '35', 13),
-(9, '49', 3),
-(10, '7', 9);
+(1, '34', 3, 1),
+(2, '3', 2, 2),
+(3, '45', 5, 3),
+(4, '348', 6, 4),
+(5, '52', 10, 5),
+(6, '38', 11, 1),
+(7, '50', 14, 2),
+(8, '35', 13, 3),
+(9, '49', 3, 4),
+(10, '7', 9, 2);
 
 insert into Billing (id_billing, type, tax_number, total_purchase, id_order)
 values
@@ -158,8 +167,8 @@ values
 ('deacfd6b00beea2fbb67e2c7a54abae8b02c7740', 9, '49150 Muir Lane', 'Mexico','2'),
 ('bdac11b1aa117086f7d9f6ef51283539accb093a', 10, '9 Duke Parkway', 'Solomon Islands','1');
 
-
-
+#Store Procedure
+------------------------------------------------------------------------------------------------------------------------------------
 /* in the column field put some column from the orders table, and set the order_by form, ie 'ASC' or 'DESC'*/
 DELIMITER //
 CREATE PROCEDURE `search_Orders` (IN column_a VARCHAR(20), IN order_by VARCHAR(4))
@@ -213,3 +222,75 @@ EXECUTE resultSQL;
 DEALLOCATE PREPARE resultSQL;        
 
 END //
+
+#Views
+------------------------------------------------------------------------------------------------------------------------------------
+/* 5 views*/
+
+/*Premiums Customers*/
+CREATE OR REPLACE VIEW v_Total_Buy_premium_customers
+AS
+(
+SELECT bi.total_purchase AS 'Total Buy', cu.first_name as 'Name'
+FROM customers as cu
+JOIN orders AS o ON o.customer_id = cu.customer_id
+JOIN billing AS bi ON bi.id_order = o.id_order 
+WHERE bi.total_purchase > 100000                                              /*Minimum amount for premium client*/
+GROUP BY name 
+);
+SELECT * FROM PYME_DROP_SHIPPING.v_Total_Buy_premium_customers;
+
+/*this view only select name and tracking number*/
+CREATE OR replace view v_Customers_tracking_number
+AS
+(
+SELECT c.first_name as Customers, s.tracking_number as 'Tracking Number'
+FROM Customers as c
+JOIN orders as o ON o.customer_id = c.customer_id
+JOIN shipments as s ON s.id_order = o.id_order
+);
+SELECT * FROM PYME_DROP_SHIPPING.v_Customers_tracking_number;
+
+
+/* show all the countries where they are sent */
+CREATE OR REPLACE VIEW v_country_shipments
+AS
+(
+SELECT country
+FROM shipments
+GROUP BY country
+ORDER BY country asc
+);
+SELECT * FROM pyme_drop_shipping.v_country_shipments;
+
+
+/*Display the Buyer with the seller*/
+CREATE OR replace view v_Seller_to_customers
+AS
+(
+SELECT cu.first_name as 'Buyer', se.name as 'Seller'
+FROM Customers as cu
+JOIN orders as o ON o.customer_id = cu.customer_id
+JOIN billing as bi ON bi.id_order = o.id_order
+JOIN commission as co ON co.id_billing = bi.id_billing
+JOIN seller as se ON se.id_seller = co.id_seller
+);
+SELECT * FROM PYME_DROP_SHIPPING.v_seller_to_customers;
+
+
+/*Display the Best Seller*/
+CREATE OR replace view v_Best_seller
+AS
+(
+SELECT sum(bi.total_purchase) as 'Total sold', se.name as 'Seller'
+FROM Billing as bi
+JOIN commission as co ON co.id_billing = bi.id_billing
+JOIN seller as se ON se.id_seller = co.id_seller
+group by name
+order by total_purchase desc
+);
+SELECT * FROM PYME_DROP_SHIPPING.v_best_seller;
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
