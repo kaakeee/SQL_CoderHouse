@@ -292,5 +292,22 @@ order by total_purchase desc
 SELECT * FROM PYME_DROP_SHIPPING.v_best_seller;
 
 ------------------------------------------------------------------------------------------------------------------------------------
+#Users
 
+CREATE USER 'Data_Analist'@'localhost' IDENTIFIED BY 'iLoveData32';
+CREATE USER 'IT'@'localhost' IDENTIFIED BY 'IamADM68k';                /*users and passwords*/
+CREATE USER 'Boss'@'localhost' IDENTIFIED BY 'MeGaPlusUwU+OwO';
 
+GRANT SELECT ON *.* TO 'Data_Analist'@'localhost';                     /*just read*/
+GRANT SELECT, UPDATE, INSERT ON *.* TO 'IT'@'localhost';               /*read, modify and create*/
+GRANT ALL ON *.* TO 'Boss'@'localhost';                               /*all grant*/
+
+/* DROP USER 'IT'@'localhost'; */ /*PARA ELIMINARLOS*/
+/* DROP USER 'Data_Analist'@'localhost'; */
+/* DROP USER 'Boss'@'localhost'; */
+
+SELECT * FROM mysql.user WHERE user LIKE 'IT%';               /*to check your permissions*/
+SELECT * FROM mysql.user WHERE user LIKE 'Data_Analist%';   
+SELECT * FROM mysql.user WHERE user LIKE 'Boss%';              
+
+------------------------------------------------------------------------------------------------------------------------------------
