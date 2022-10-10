@@ -219,7 +219,7 @@ FROM customers as cu
 JOIN orders AS o ON o.customer_id = cu.customer_id
 JOIN billing AS bi ON bi.id_order = o.id_order 
 WHERE bi.total_purchase > 100000                                              /*Minimum amount for premium client*/
-GROUP BY name 
+ORDER BY total_purchase desc
 );
 SELECT * FROM PYME_DROP_SHIPPING.v_Total_Buy_premium_customers;
 
