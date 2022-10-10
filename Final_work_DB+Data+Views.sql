@@ -1,9 +1,6 @@
 /*
 
-
-
 Data Base
-
 
 */
 
@@ -260,6 +257,19 @@ JOIN seller as se ON se.id_seller = co.id_seller
 );
 SELECT * FROM PYME_DROP_SHIPPING.v_seller_to_customers;
 
+
+/*Display the Best Seller*/
+CREATE OR replace view v_Best_seller
+AS
+(
+SELECT sum(bi.total_purchase) as 'Total sold', se.name as 'Seller'
+FROM Billing as bi
+JOIN commission as co ON co.id_billing = bi.id_billing
+JOIN seller as se ON se.id_seller = co.id_seller
+group by name
+order by total_purchase desc
+);
+SELECT * FROM PYME_DROP_SHIPPING.v_best_seller;
 
 /*Display the Best Seller*/
 CREATE OR replace view v_Best_seller
